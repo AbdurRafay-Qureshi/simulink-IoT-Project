@@ -4,29 +4,6 @@ A MATLAB simulation of an IoT **Wireless Sensor Network** where sensor nodes are
 
 ---
 
-## Screenshots
-
-### Network Topology
-
-Star layout with 20 sensor nodes (blue) and central sink (red) at `(50, 50)`.
-
-![WSN network topology — 20 sensor nodes connected to central sink](screenshots/network_topology.png)
-
-### Node Ranking Table
-
-Console output with nodes sorted by rank (`Distance + LinkCost`).
-
-![Node ranking table sorted by rank ascending](screenshots/node_ranking_table.png)
-
-### MATLAB Workspace
-
-Variables in memory after running `wsn_deployment_ranking.m`.
-
-![MATLAB workspace variables after simulation](screenshots/matlab_workspace.png)
-
-
----
-
 ## Overview
 
 This project models a fundamental IoT networking scenario: **many distributed sensor nodes** collecting data and forwarding it to a **single sink (gateway)**. Each node is scored using a composite **rank** metric that combines:
