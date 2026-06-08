@@ -6,24 +6,23 @@ A MATLAB simulation of an IoT **Wireless Sensor Network** where sensor nodes are
 
 ## Screenshots
 
+### Network Topology
 
+Star layout with 20 sensor nodes (blue) and central sink (red) at `(50, 50)`.
 
-*Network topology — star layout with 20 sensor nodes (blue) and central sink (red)*
+![WSN network topology — 20 sensor nodes connected to central sink](screenshots/network_topology.png)
 
+### Node Ranking Table
 
+Console output with nodes sorted by rank (`Distance + LinkCost`).
 
-*Console output — nodes sorted by rank (Distance + LinkCost)*
+![Node ranking table sorted by rank ascending](screenshots/node_ranking_table.png)
 
+### MATLAB Workspace
 
+Variables in memory after running `wsn_deployment_ranking.m`.
 
-*MATLAB workspace — simulation variables after running the script*
-
-
-| Preview       | File                                                                       |
-| ------------- | -------------------------------------------------------------------------- |
-| Network plot  | `[screenshots/network_topology.png](screenshots/network_topology.png)`     |
-| Ranking table | `[screenshots/node_ranking_table.png](screenshots/node_ranking_table.png)` |
-| Workspace     | `[screenshots/matlab_workspace.png](screenshots/matlab_workspace.png)`     |
+![MATLAB workspace variables after simulation](screenshots/matlab_workspace.png)
 
 
 ---
@@ -203,13 +202,13 @@ The script plots a **star topology** where every sensor node connects directly t
 
 The figure shows 20 blue sensor nodes (labeled 1–20), the red sink at `(50, 50)`, and dashed black lines representing direct links to the gateway.
 
-
+![WSN network topology plot](screenshots/network_topology.png)
 
 ### Node Ranking Table
 
-Console output after sorting by rank. Node **13** has the lowest rank (~~11.19) because it sits very close to the sink with a moderate link cost. Node **5** has the highest rank (~~68.73) due to being far from the sink.
+Console output after sorting by rank. Node **13** has the lowest rank (~11.19) because it sits very close to the sink with a moderate link cost. Node **5** has the highest rank (~68.73) due to being far from the sink.
 
-
+![Node ranking table console output](screenshots/node_ranking_table.png)
 
 **Example (top-ranked node):**
 
@@ -231,8 +230,7 @@ Console output after sorting by rank. Node **13** has the lowest rank (~~11.19) 
 
 After execution, the following variables are available in the workspace:
 
-
-
+![MATLAB workspace after simulation run](screenshots/matlab_workspace.png)
 
 | Variable         | Size   | Description                     |
 | ---------------- | ------ | ------------------------------- |
