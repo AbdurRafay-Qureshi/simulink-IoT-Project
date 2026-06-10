@@ -1,300 +1,376 @@
-# Wireless Sensor Network (WSN) Deployment & Node Ranking
+# Simulink-Based RPL-Inspired IoT Wireless Sensor Network Routing Simulator
 
-A MATLAB simulation of an IoT **Wireless Sensor Network** where sensor nodes are randomly deployed in a 2D area, evaluated by distance and link cost, and ranked for optimal routing toward a central sink node.
+This project is a MATLAB and Simulink-based simulator for demonstrating simplified RPL-inspired routing in an IoT Wireless Sensor Network.
 
----
+The simulator deploys sensor nodes randomly in a 100 x 100 area, places a sink node at the center, calculates communication links using Euclidean distance, computes rank values using distance-based link cost, and selects parent nodes for forwarding data toward the sink.
+
+This project is designed for IoT / Simulink coursework and focuses on understanding basic rank-based routing and DODAG-like parent selection.
+
+> **Note:** The Simulink model file (`RPL_IoT_Network_Simulator.slx`) is not included in this repository because it was built in MATLAB Online / Simulink Online. Follow [simulink/SIMULINK_MODEL_SETUP.md](simulink/SIMULINK_MODEL_SETUP.md) to recreate the model manually.
+
+## Project Topic
+
+**Simulink-Based RPL-Inspired IoT Wireless Sensor Network Routing Simulator**
 
 ## Overview
 
-This project models a fundamental IoT networking scenario: **many distributed sensor nodes** collecting data and forwarding it to a **single sink (gateway)**. Each node is scored using a composite **rank** metric that combines:
+Wireless Sensor Networks are commonly used in IoT systems where small sensor nodes collect data and forward it toward a central sink or gateway.
 
-- **Distance** — Euclidean distance from the node to the sink (physical proximity)
-- **Link Cost** — Simulated communication cost (energy, latency, or channel quality)
+RPL is a routing protocol designed for low-power and lossy networks. In RPL, nodes form a routing structure toward a root node using rank values. This project does not implement the complete RPL protocol, but it simulates the core idea of rank-based parent selection.
 
-Nodes with a **lower rank** are preferred for routing and data collection because they are closer to the sink and/or have cheaper links.
-
-This is a simplified analogue of rank-based routing concepts used in protocols such as **RPL** (IPv6 Routing Protocol for Low-Power and Lossy Networks), commonly found in IoT deployments.
-
----
+Each node selects the parent that gives the lowest rank path toward the sink.
 
 ## Features
 
+- Simulates an IoT Wireless Sensor Network
+- Uses 10 randomly deployed sensor nodes
+- Places sink node at `(50, 50)`
+- Uses a 100 x 100 simulation area
+- Assigns random energy values to sensor nodes
+- Calculates Euclidean distance between nodes
+- Checks communication range
+- Calculates distance-based link cost
+- Computes rank for each node
+- Selects parent node based on lowest rank
+- Supports multi-hop routing paths
+- Provides MATLAB plotting
+- Includes Simulink MATLAB Function block code
+- Includes documentation for manual Simulink model creation
 
-| Feature           | Description                                            |
-| ----------------- | ------------------------------------------------------ |
-| Random deployment | 20 sensor nodes placed uniformly in a 100×100 area     |
-| Central sink      | Gateway fixed at the geometric center `(50, 50)`       |
-| Distance metric   | Euclidean distance from each node to the sink          |
-| Link cost         | Random integer cost between 1 and 10 per node          |
-| Node ranking      | `Rank = Distance + LinkCost`, sorted ascending         |
-| Visualization     | Star-topology plot with labeled nodes and dashed links |
-| Console output    | Tabular results matrix printed to the Command Window   |
+## Simulation Parameters
 
+| Parameter | Value |
+|---|---:|
+| Area Width | 100 |
+| Area Height | 100 |
+| Sensor Nodes | 10 |
+| Sink Nodes | 1 |
+| Total Nodes | 11 |
+| Sink Position | `(50, 50)` |
+| Communication Range | 40 |
+| Sink Energy | 100 |
+| Sensor Node Energy | Random 1 to 10 |
 
----
+## Routing Logic
 
-## Project Structure
+The simulator calculates distance between nodes using:
 
+```text
+d = sqrt((x2 - x1)^2 + (y2 - y1)^2)
 ```
-simulink-IoT Project/
-├── wsn_deployment_ranking.m   # Main simulation script
-├── screenshots/
-│   ├── network_topology.png   # WSN deployment visualization
-│   ├── node_ranking_table.png # Sorted node metrics (console output)
-│   └── matlab_workspace.png   # MATLAB workspace variables after run
+
+A link exists only if:
+
+```text
+distance <= communication_range
+```
+
+Link cost is calculated as:
+
+```text
+link_cost = distance * 0.1
+```
+
+Rank is calculated as:
+
+```text
+Node Rank = Parent Rank + Link Cost
+```
+
+The sink node has rank:
+
+```text
+0
+```
+
+Each sensor node selects the neighbor that gives the lowest rank path toward the sink.
+
+## Example Routing Path
+
+Example:
+
+```text
+X_9 -> X_4 -> Sink
+```
+
+This means node `X_9` forwards its data to node `X_4`, and node `X_4` forwards it to the sink.
+
+## Repository Structure
+
+```text
+simulink-IoT-Project/
 ├── README.md
-├── LICENSE
-└── .gitignore
+├── src/
+│   ├── rpl_routing_core.m
+│   ├── run_matlab_simulation.m
+│   ├── plot_rpl_network.m
+│   ├── plot_simulink_results.m
+│   └── simulink_function_block_code.m
+├── simulink/
+│   ├── SIMULINK_MODEL_SETUP.md
+│   ├── block_diagram_description.md
+│   └── expected_model_layout.txt
+├── docs/
+│   ├── project_scope.md
+│   ├── output_explanation.md
+│   ├── simulation_workflow.md
+│   └── limitations.md
+└── screenshots/
+    └── README.md
 ```
 
----
+## Running Without Simulink
 
-## Requirements
+You can run the MATLAB script version directly.
 
-- **MATLAB** R2016b or later (uses standard built-in functions only)
-- No additional toolboxes required
-
----
-
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/<your-username>/simulink-IoT-Project.git
-cd simulink-IoT-Project
-```
-
-### 2. Run the simulation
-
-Open MATLAB, navigate to the project folder, and run:
+Open MATLAB or MATLAB Online, go to the `src` folder, and run:
 
 ```matlab
-wsn_deployment_ranking
+run('run_matlab_simulation.m')
 ```
 
-Or from the MATLAB Command Window:
+This will:
+
+1. Generate random sensor nodes
+2. Calculate routing ranks
+3. Select parent nodes
+4. Print the routing table
+5. Plot the network topology
+
+## Running With Simulink
+
+Create a Simulink model named:
+
+```text
+RPL_IoT_Network_Simulator.slx
+```
+
+The model should contain:
+
+* 3 Constant blocks
+* 1 MATLAB Function block
+* 5 To Workspace blocks
+
+See [simulink/SIMULINK_MODEL_SETUP.md](simulink/SIMULINK_MODEL_SETUP.md) for step-by-step instructions.
+
+### Constant Blocks
+
+| Block  | Value |
+| ------ | ----: |
+| width  |   100 |
+| height |   100 |
+| range  |    40 |
+
+### MATLAB Function Block
+
+Paste the code from:
+
+```text
+src/simulink_function_block_code.m
+```
+
+into the MATLAB Function block.
+
+### To Workspace Blocks
+
+Use these output variable names:
+
+| Output      | Workspace Variable |
+| ----------- | ------------------ |
+| X           | X                  |
+| Y           | Y                  |
+| node_energy | Energy             |
+| node_rank   | Rank               |
+| parent_node | parent_node        |
+
+After running the Simulink model, MATLAB stores the result inside:
 
 ```matlab
-run('wsn_deployment_ranking.m')
+out
 ```
 
-### 3. Expected output
+Expected fields:
 
-- A **figure window** showing the network topology (blue nodes, red sink, dashed links)
-- A **table in the Command Window** listing all nodes sorted by rank (best first)
+```text
+out.Energy
+out.Rank
+out.X
+out.Y
+out.parent_node
+```
 
----
-
-## How It Works
-
-### Step 1 — Network Parameters
+To plot Simulink output, run:
 
 ```matlab
-numNodes = 20;      % 20 sensor nodes
-areaSize = 100;     % 100×100 deployment region
+plot_simulink_results
 ```
 
-The sink is placed at the center of the deployment area:
+## Tested Simulink Output Format
+
+In MATLAB Online, the output appeared as:
+
+```text
+out =
+
+Simulink.SimulationOutput:
+
+Energy       [11x51 double]
+Rank         [11x51 double]
+X            [11x51 double]
+Y            [11x51 double]
+parent_node  [11x51 double]
+tout         [51x1 double]
+```
+
+The final simulation values are extracted using:
 
 ```matlab
-sink.x = areaSize/2;   % 50
-sink.y = areaSize/2;   % 50
+X = out.X(:, end);
+Y = out.Y(:, end);
+node_energy = out.Energy(:, end);
+node_rank = out.Rank(:, end);
+parent_node = out.parent_node(:, end);
 ```
 
-### Step 2 — Random Node Deployment
+## Output Graph
 
-Each sensor node receives random `(X, Y)` coordinates within `[0, 100]`:
+The graph shows:
 
-```matlab
-nodeX = rand(numNodes, 1) * areaSize;
-nodeY = rand(numNodes, 1) * areaSize;
+* Sink node as a square
+* Sensor nodes as circular markers
+* Energy level using color
+* Arrows from each node to its parent
+* Rank and energy label for each node
+
+Example node label:
+
+```text
+X_4 R=3.3 E=8
 ```
 
-This mimics ad-hoc IoT sensor placement in an open field or indoor environment.
+Meaning:
 
-### Step 3 — Distance Calculation
+* Node: `X_4`
+* Rank: `3.3`
+* Energy: `8`
 
-Euclidean distance from each node to the sink:
+## Output Table
 
-$$
-d_i = \sqrt{(x_i - x_{sink})^2 + (y_i - y_{sink})^2}
-$$
+The command window prints:
 
-```matlab
-distance = sqrt((nodeX - sink.x).^2 + (nodeY - sink.y).^2);
+```text
+Node ID    X Pos    Y Pos    Energy    Rank    Parent
 ```
 
-### Step 4 — Link Cost Assignment
+Example:
 
-Each node is assigned a random link cost between 1 and 10, simulating varying channel conditions (interference, packet loss, energy drain):
-
-```matlab
-linkCost = randi([1 10], numNodes, 1);
+```text
+X_9        93.9     22.1     5         5.63    X_4
 ```
 
-### Step 5 — Rank Computation
+This means `X_9` forwards data to `X_4`.
 
-The rank combines physical distance and communication cost:
+## Screenshots
 
-$$
-\text{Rank}_i = \text{Distance}_i + \text{LinkCost}_i
-$$
+### Simulation Output Graph
 
-```matlab
-rank = distance + linkCost;
+![RPL-inspired routing topology graph](screenshots/graph.png)
+
+### Simulink MATLAB Function Block
+
+![MATLAB Function block code in Simulink](screenshots/function%20block.png)
+
+## Project Scope
+
+This project demonstrates a simplified RPL-inspired rank-based routing mechanism for IoT Wireless Sensor Networks.
+
+It is suitable for understanding:
+
+* Node deployment
+* Sink-based routing
+* Link cost
+* Rank calculation
+* Parent selection
+* Multi-hop path formation
+
+See [docs/project_scope.md](docs/project_scope.md) for full scope details.
+
+## Limitations
+
+This is not a full RPL implementation.
+
+It does not include:
+
+* DIO messages
+* DAO messages
+* DIS messages
+* Trickle timer
+* IPv6
+* 6LoWPAN
+* Packet loss
+* Latency
+* Throughput
+* Real packet forwarding
+* Real sensor hardware
+* Energy depletion over time
+* Mobility
+* Security attacks
+
+See [docs/limitations.md](docs/limitations.md) for the complete list.
+
+## Future Improvements
+
+Possible improvements:
+
+* Add energy consumption during transmission
+* Add packet forwarding simulation
+* Add node death when energy reaches zero
+* Add packet delivery ratio
+* Add delay calculation
+* Add mobility
+* Add RPL control message simulation
+* Add DODAG visualization
+* Add attack detection such as rank attack or sinkhole attack
+
+## Correct Description
+
+This project should be described as:
+
+```text
+A Simulink-based RPL-inspired rank-based routing simulator for IoT Wireless Sensor Networks.
 ```
 
-**Lower rank = better node** for direct communication with the sink.
+Avoid calling it a complete RPL protocol implementation.
 
-### Step 6 — Results Table
+## Suggested Final Topic Name
 
-All metrics are assembled into a matrix and sorted by rank:
-
-
-| Column   | Description                         |
-| -------- | ----------------------------------- |
-| NodeID   | Unique node identifier (1–20)       |
-| X        | X-coordinate in the deployment area |
-| Y        | Y-coordinate in the deployment area |
-| Distance | Euclidean distance to sink          |
-| LinkCost | Simulated link communication cost   |
-| Rank     | Combined routing priority score     |
-
-
-```matlab
-Results = [NodeID nodeX nodeY distance linkCost rank];
-Results = sortrows(Results, 6);   % Sort by Rank (column 6)
+```text
+Simulink-Based RPL-Inspired IoT Wireless Sensor Network Routing Simulator
 ```
 
-### Step 7 — Network Visualization
+Alternative:
 
-The script plots a **star topology** where every sensor node connects directly to the sink (single-hop communication). This is typical for small WSNs or the initial discovery phase before multi-hop routing is established.
-
----
-
-## Output Details
-
-### Network Topology
-
-The figure shows 20 blue sensor nodes (labeled 1–20), the red sink at `(50, 50)`, and dashed black lines representing direct links to the gateway.
-
-![WSN network topology plot](screenshots/network_topology.png)
-
-### Node Ranking Table
-
-Console output after sorting by rank. Node **13** has the lowest rank (~11.19) because it sits very close to the sink with a moderate link cost. Node **5** has the highest rank (~68.73) due to being far from the sink.
-
-![Node ranking table console output](screenshots/node_ranking_table.png)
-
-**Example (top-ranked node):**
-
-
-| NodeID | X     | Y     | Distance | LinkCost | Rank      |
-| ------ | ----- | ----- | -------- | -------- | --------- |
-| 13     | 52.11 | 49.42 | 2.19     | 9.00     | **11.19** |
-
-
-**Example (lowest-ranked node):**
-
-
-| NodeID | X     | Y    | Distance | LinkCost | Rank      |
-| ------ | ----- | ---- | -------- | -------- | --------- |
-| 5      | 92.89 | 9.87 | 58.73    | 10.00    | **68.73** |
-
-
-### MATLAB Workspace
-
-After execution, the following variables are available in the workspace:
-
-![MATLAB workspace after simulation run](screenshots/matlab_workspace.png)
-
-| Variable         | Size   | Description                     |
-| ---------------- | ------ | ------------------------------- |
-| `numNodes`       | 1×1    | Number of sensor nodes (20)     |
-| `areaSize`       | 1×1    | Deployment area dimension (100) |
-| `nodeX`, `nodeY` | 20×1   | Node coordinates                |
-| `sink`           | struct | Sink position (`x`, `y`)        |
-| `distance`       | 20×1   | Per-node distance to sink       |
-| `linkCost`       | 20×1   | Per-node link cost (1–10)       |
-| `rank`           | 20×1   | Per-node rank score             |
-| `Results`        | 20×6   | Full sorted results matrix      |
-| `NodeID`         | 20×1   | Node identifiers                |
-
-
----
-
-## Network Topology Diagram
-
-```
-                    [Node 3]
-                        |
-    [Node 4]            |            [Node 8]
-         \              |              /
-          \             |             /
-           \    [Node 13]            /
-            \       |              /
-             \      |             /
-              \  [SINK]          /
-               \  (50,50)       /
-                \    |        /
-                 \   |       /
-                  \  |      /
-            [Node 1] | [Node 20]
+```text
+Simulink-Based Rank-Based Routing Simulator for IoT Wireless Sensor Networks
 ```
 
-All nodes communicate in a **single-hop star topology** directly with the central sink — a common pattern in small-scale IoT gateways (e.g., Zigbee coordinator, LoRaWAN gateway, Wi-Fi AP).
+## Documentation
 
----
-
-## IoT Context & Real-World Relevance
-
-
-| Simulation Concept | Real-World IoT Equivalent                            |
-| ------------------ | ---------------------------------------------------- |
-| Sensor nodes       | Temperature, motion, or humidity sensors             |
-| Sink / Gateway     | Edge gateway, MQTT broker, cloud ingress             |
-| Distance           | RF path loss, geographic proximity                   |
-| Link Cost          | Battery drain, retransmissions, SNR                  |
-| Rank               | Routing priority in mesh/LLN protocols (RPL, Zigbee) |
-
-
-In production IoT systems, rank-based routing helps determine which nodes should act as **preferred parents** when building multi-hop paths toward a border router or cloud endpoint.
-
----
-
-## Customization
-
-You can tune the simulation by editing parameters at the top of `wsn_deployment_ranking.m`:
-
-```matlab
-numNodes = 20;          % Increase for denser networks
-areaSize = 100;         % Change deployment area size
-linkCost = randi([1 10], numNodes, 1);  % Adjust cost range
-```
-
-**Ideas for extension:**
-
-- Weight distance and link cost differently: `rank = 0.7*distance + 0.3*linkCost`
-- Add multi-hop routing instead of star topology
-- Simulate node energy depletion over time
-- Export results to CSV for analysis
-- Integrate with Simulink for hardware-in-the-loop testing
-
----
+| Document | Description |
+|----------|-------------|
+| [Project Scope](docs/project_scope.md) | Goals, features, and what is excluded |
+| [Simulation Workflow](docs/simulation_workflow.md) | Step-by-step simulation process |
+| [Output Explanation](docs/output_explanation.md) | Meaning of each output variable |
+| [Limitations](docs/limitations.md) | Known simplifications and missing features |
+| [Simulink Setup](simulink/SIMULINK_MODEL_SETUP.md) | How to build the `.slx` model manually |
+| [Block Diagram](simulink/block_diagram_description.md) | Simulink block-level description |
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE) — Copyright (c) 2026 AbdurRafay Qureshi.
-
----
+This project is licensed under the [MIT License](LICENSE).
 
 ## Author
 
-**AbdurRafay Qureshi(2023F-BCE-006)**
+**Muhammad Abdur Rafay Qureshi**
 
-**Nauman Imtiaz(2023F-BCE-008)**
-
-**Maaz Sohail(2023F-BCE-029)**
-
-IoT / Simulink coursework project — Wireless Sensor Network deployment and node ranking simulation.
+IoT / Simulink coursework — RPL-inspired rank-based routing simulator for Wireless Sensor Networks.

@@ -1,0 +1,14 @@
+Expected Simulink Model Layout
+
+[Constant: width = 100]  ----\
+                              \
+[Constant: height = 100] ------> [MATLAB Function: rpl_sim] ----> [To Workspace: X]
+                              /                              \
+[Constant: range = 40]  ------/                                -> [To Workspace: Y]
+                                                              -> [To Workspace: Energy]
+                                                              -> [To Workspace: Rank]
+                                                              -> [To Workspace: parent_node]
+
+After simulation:
+- Output is stored inside a Simulink.SimulationOutput object named out.
+- Use plot_simulink_results.m to extract and visualize the final routing topology.

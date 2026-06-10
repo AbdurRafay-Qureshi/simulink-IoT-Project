@@ -5,6 +5,9 @@
 slprj/
 *.slxc
 
+# Simulink (model must be created manually — see simulink/SIMULINK_MODEL_SETUP.md)
+# RPL_IoT_Network_Simulator.slx
+
 # OS
 Thumbs.db
 Desktop.ini
